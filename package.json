@@ -1,37 +1,39 @@
 {
-  "name": "restaurant_ordering_system",
+  "name": "restaurant-ordering-system",
   "version": "1.0.0",
-  "description": "balucabaco",
+  "description": "Projeto da disciplina de Desenvolvimento Back-end do curso de Engenharia de Software - 4P",
   "keywords": [
     "back-end",
     "ts",
-    "js",
-    "API",
-    "restaurante",
-    "ordering",
-    "microservice"
+    "api",
+    "restaurant",
+    "order"
   ],
-  "homepage": "https://github.com/BiaMillek/restaurant_ordering_system#readme",
+  "homepage": "https://github.com/matthewrpereira/restaurant-ordering-system#readme",
   "bugs": {
-    "url": "https://github.com/BiaMillek/restaurant_ordering_system/issues"
+    "url": "https://github.com/matthewrpereira/restaurant-ordering-system/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BiaMillek/restaurant_ordering_system.git"
+    "url": "git+https://github.com/matthewrpereira/restaurant-ordering-system.git"
   },
   "license": "ISC",
-  "author": "Bianca Millek",
+  "author": "Mateus R. Pereira",
   "type": "module",
-  "main": "dist/server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/server.ts",
-    "build": "",
+    "dev": "tsx watch src/server.js",
+    "build": "tsc",
     "start": "node dist/server.js"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
     "tsx": "^4.23.12",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1"
   }
 }
