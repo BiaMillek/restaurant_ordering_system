@@ -1,74 +1,11 @@
 import express from "express";
 import { randomUUID } from "node:crypto";
+import supabase from "./config/supabase.js";
+import Category from "./models/Category.js";
+import Product from "./models/Product.js";
 
 const app = express();
 app.use(express.json());
-
-const pizzaCategoryId = randomUUID();
-const drinkCategoryId = randomUUID();
-
-const categories = [
-  {
-    id: pizzaCategoryId,
-    name: "Pizzas",
-    description:
-      "Pizzas salgadas com diferentes sabores, tamanhos e combinações de ingredientes.",
-  },
-  {
-    id: drinkCategoryId,
-    name: "Bebidas",
-    description:
-      "Bebidas para acompanhar as pizzas, incluindo refrigerantes, sucos e água.",
-  },
-];
-
-const products = [
-  {
-    id: randomUUID(),
-    categoryId: pizzaCategoryId,
-    name: "Calabresa",
-    description:
-      "Pizza com molho de tomate, muçarela, calabresa fatiada e cebola.",
-    price: 45.9,
-  },
-  {
-    id: randomUUID(),
-    categoryId: pizzaCategoryId,
-    name: "Frango com Catupiry",
-    description:
-      "Pizza com molho de tomate, muçarela, frango desfiado e catupiry.",
-    price: 49.9,
-  },
-  {
-    id: randomUUID(),
-    categoryId: pizzaCategoryId,
-    name: "Margherita",
-    description:
-      "Pizza com molho de tomate, muçarela, tomate e manjericão fresco.",
-    price: 44.9,
-  },
-  {
-    id: randomUUID(),
-    categoryId: drinkCategoryId,
-    name: "Coca-Cola 2L",
-    description: "Refrigerante Coca-Cola em garrafa de 2 litros.",
-    price: 12.9,
-  },
-  {
-    id: randomUUID(),
-    categoryId: drinkCategoryId,
-    name: "Suco de Laranja",
-    description: "Suco natural de laranja, servido gelado.",
-    price: 9.9,
-  },
-  {
-    id: randomUUID,
-    categoryId: pizzaCategoryId,
-    name: "Pizza de Chocolate",
-    description: "Pizza doce com chocolate cremoso e granulado.",
-    price: 39.9,
-  },
-];
 
 // ==========================
 // Root
@@ -83,10 +20,21 @@ app.get("/", (req, res) => {
 // ==========================
 // Categories
 // ==========================
-app.get("/categories", (req, res) => {
-  res.status(200).json(categories);
+app.get("/categories", async (req, res) => {
+  try {
+    const categories = await Category.findAll();
+
+    res.status(200).json(categories);
+  } catch (error) {
+    console.log("Erro ao buscar categorias: ", error);
+
+    res.status(500).json({
+      message: "Erro ao buscar categorias.",
+    });
+  }
 });
 
+/*
 app.get("/categories/:id", (req, res) => {
   const category = categories.find((category) => {
     return category.id == req.params.id;
@@ -145,23 +93,41 @@ app.delete("/categories/:id", (req, res) => {
     message: "Categoria removida com sucesso.",
   });
 });
+*/
 
 // ==========================
 // Products
 // ==========================
-app.get("/products", (req, res) => {
-  res.status(200).json(products);
+app.get("/products", async (req, res) => {
+  try {
+    const products = await Product.findAll();
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.log("Erro ao buscar produtos: ", error);
+
+    res.status(500).json({
+      message: "Erro ao buscar produtos.",
+    });
+  }
 });
 
-app.post("/products", (req, res) => {
-  const product = {
-    id: randomUUID(),
-    ...req.body,
-  };
-  products.push(product);
-  res.status(201).json(product);
+app.post("/products", async (req, res) => {
+  try {
+    const product = await Product.create(
+      req.body);
+
+    res.status(201).json(product);
+  } catch (error) {
+    console.log("Erro ao criar produto: ", error);
+
+    res.status(500).json({
+      message: "Erro ao criar produto.",
+    });
+  }
 });
 
+/*
 app.get("/products/:id", (req, res) => {
   const product = products.find((product) => {
     return product.id == req.params.id;
@@ -209,9 +175,24 @@ app.delete("/products/:id", (req, res) => {
     message: "Produto removido com sucesso.",
   });
 });
+*/
 
 app.get("/test-supabase", async (req, res) => {
-  //criar teste de conexão...
-})
+  const { data, error } = await supabase.from("categories").select("*");
+  if (error) {
+    console.log("Erro ao consultar Supabse: ", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Erro ao consultar banco de dados",
+      error: error.message,
+    });
+  }
+  res.status(200).json({
+    success: true,
+    message: "Conexão com Supabase realizada com sucesso!",
+    data,
+  });
+});
 
 export default app;
