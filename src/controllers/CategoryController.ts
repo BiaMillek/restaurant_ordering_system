@@ -1,10 +1,11 @@
 import type { Request, Response } from "express";
-import Category from "../models/Category.js";
+import CategoryRepository from "../repositories/CategoryRepository.js";
+import { Category } from "../models/Category.js";
 
 async function getAll(req: Request, res: Response) {
   try {
     try {
-      const categories = await Category.findAll();
+      const categories = await CategoryRepository.findAll();
 
       res.status(200).json(categories);
     } catch (error) {
@@ -26,9 +27,16 @@ async function getById(req: Request<{ id: string }>, res: Response) {
     });
   }
   try {
-    const category = await Category.findById(id);
+    const category = await CategoryRepository.findById(id);
 
-    res.status(200).json(category);
+    res.status(200).json({
+      id: category.getId(),
+      name: category.getName(),
+      description: category.getDescription(),
+      icon: category.getIcon(),
+      display_order: category.getDisplayOrder(),
+      active: category.isActive(),
+    });
   } catch (error) {
     console.log("Erro ao buscar categoria: ", error);
 
@@ -39,10 +47,14 @@ async function getById(req: Request<{ id: string }>, res: Response) {
 }
 
 async function create(req: Request, res: Response) {
-  try {
-    const category = await Category.create(req.body);
+  const { name, display_order, description, icon } = req.body;
 
-    res.status(201).json(category);
+  try {
+    const category = new Category(name, display_order, description, icon);
+
+    const createdCategory = await CategoryRepository.create(category);
+
+    res.status(201).json(createdCategory);
   } catch (error) {
     console.log("Erro ao criar categoria: ", error);
 
@@ -54,6 +66,7 @@ async function create(req: Request, res: Response) {
 
 async function update(req: Request<{ id: string }>, res: Response) {
   const { id } = req.params;
+  const { name, display_order, description, icon } = req.body;
 
   if (!id) {
     return res.status(400).json({
@@ -62,9 +75,11 @@ async function update(req: Request<{ id: string }>, res: Response) {
   }
 
   try {
-    const category = await Category.update(id, req.body);
+    const category = await CategoryRepository.findById(id);
 
-    res.status(200).json(category);
+    const updateCategory = await CategoryRepository.update(category);
+
+    res.status(200).json(updateCategory);
   } catch (error) {
     console.log("Erro ao atualizar categoria: ", error);
 
@@ -84,7 +99,7 @@ async function remove(req: Request<{ id: string }>, res: Response) {
   }
 
   try {
-    const category = await Category.remove(id);
+    const category = await CategoryRepository.remove(id);
 
     res.status(200).json({
       message: "Categoria removida com sucesso!",
@@ -98,10 +113,7 @@ async function remove(req: Request<{ id: string }>, res: Response) {
   }
 }
 
-async function getByKeyword(
-    req: Request<{ keyword: string }>, 
-    res: Response
-) {
+async function getByKeyword(req: Request<{ keyword: string }>, res: Response) {
   const { keyword } = req.params;
 
   if (!keyword || typeof keyword != "string") {
@@ -111,7 +123,7 @@ async function getByKeyword(
   }
 
   try {
-    const categories = await Category.findByKeyword(keyword);
+    const categories = await CategoryRepository.findByKeyword(keyword);
 
     res.status(200).json(categories);
   } catch (error) {
