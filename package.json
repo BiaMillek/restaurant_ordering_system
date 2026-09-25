@@ -1,0 +1,42 @@
+{
+  "name": "restaurant_ordering_system",
+  "version": "1.0.0",
+  "description": "Projeto da disciplina de Desenvolvimento Back-End, 4P - Engenharia de Software - Campus SJP",
+  "keywords": [
+    "back-end",
+    "ts",
+    "js",
+    "API",
+    "restautant",
+    "ordering",
+    "microservice"
+  ],
+  "homepage": "https://github.com/matthewrpereira/restaurant_ordering_system_sjp#readme",
+  "bugs": {
+    "url": "https://github.com/matthewrpereira/restaurant_ordering_system_sjp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthewrpereira/restaurant_ordering_system_sjp.git"
+  },
+  "license": "ISC",
+  "author": "Mateus R. Pereira",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch --env-file=.env --import=tsx/esm src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.2.0",
+    "tsx": "^4.23.12",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.115.0",
+    "express": "^5.2.1"
+  }
+}
