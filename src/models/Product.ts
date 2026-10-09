@@ -1,38 +1,10 @@
-import supabase from "../config/supabase.js";
-
-async function findAll() {
-  const { data, error } = await supabase.from("products").select("*");
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-async function create(product: {
+/** Dados de domínio de um produto; acesso ao banco fica no ProductRepository. */
+export interface ProductData {
   category_id: string;
   title: string;
-  description: string;
+  description?: string | null;
   price: number;
-  image: string;
-  available: boolean;
-  active: boolean;
-}) {
-  const { data, error } = await supabase
-  .from("products")
-  .insert(product)
-  .select()
-  .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  image?: string | null;
+  available?: boolean;
+  active?: boolean;
 }
-
-export default {
-  findAll,
-  create,
-};

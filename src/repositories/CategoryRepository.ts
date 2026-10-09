@@ -1,3 +1,4 @@
+import { NotFoundError } from "../utils/errors.js";
 
 import supabase from "../config/supabase.js";
 import { Category } from "../models/Category.js";
@@ -19,7 +20,7 @@ async function findById(id: string): Promise<Category> {
     .maybeSingle();
 
   if (error) throw error;
-  if (!data) throw new Error("Categoria não encontrada.");
+  if (!data) throw new NotFoundError("Categoria não encontrada.");
 
   return Category.restore(
     data.id,
@@ -69,7 +70,7 @@ async function update(category: Category) {
     .maybeSingle();
 
   if (error) throw error;
-  if (!data) throw new Error("Categoria não encontrada.");
+  if (!data) throw new NotFoundError("Categoria não encontrada.");
 
   return data;
 }
@@ -83,7 +84,7 @@ async function remove(id: string) {
     .maybeSingle();
 
   if (error) throw error;
-  if (!data) throw new Error("Categoria não encontrada.");
+  if (!data) throw new NotFoundError("Categoria não encontrada.");
 
   return data;
 }

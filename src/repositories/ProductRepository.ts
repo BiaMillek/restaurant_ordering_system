@@ -1,15 +1,8 @@
 
 import supabase from "../config/supabase.js";
 
-export interface ProductData {
-  category_id: string;
-  title: string;
-  description?: string | null;
-  price: number;
-  image?: string | null;
-  available?: boolean;
-  active?: boolean;
-}
+import type { ProductData } from "../models/Product.js";
+export type { ProductData } from "../models/Product.js";
 
 async function findAll() {
   const { data, error } = await supabase
