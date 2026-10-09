@@ -1,12 +1,12 @@
+
 import express from "express";
 import categoryRoutes from "./routes/categoryRouter.js";
+import productRoutes from "./routes/productRouter.js";
 
 const app = express();
+
 app.use(express.json());
 
-// ==========================
-// Root
-// ==========================
 app.get("/", (req, res) => {
   res.status(200).json({
     message: "Restaurant Ordering System API",
@@ -14,9 +14,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// ==========================
-// Categories
-// ==========================
 app.use("/categories", categoryRoutes);
+app.use("/products", productRoutes);
 
 export default app;
